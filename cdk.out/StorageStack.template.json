@@ -2,9 +2,6 @@
  "Resources": {
   "SourceBucketDDD2130A": {
    "Type": "AWS::S3::Bucket",
-   "Properties": {
-    "BucketName": "bucket-src"
-   },
    "UpdateReplacePolicy": "Retain",
    "DeletionPolicy": "Retain",
    "Metadata": {
@@ -13,9 +10,6 @@
   },
   "DestinationBucket4BECDB47": {
    "Type": "AWS::S3::Bucket",
-   "Properties": {
-    "BucketName": "bucket-dst"
-   },
    "UpdateReplacePolicy": "Retain",
    "DeletionPolicy": "Retain",
    "Metadata": {
@@ -78,8 +72,7 @@
     "ProvisionedThroughput": {
      "ReadCapacityUnits": 5,
      "WriteCapacityUnits": 5
-    },
-    "TableName": "table-t"
+    }
    },
    "UpdateReplacePolicy": "Retain",
    "DeletionPolicy": "Retain",

@@ -1,7 +1,7 @@
 {
   "version": "38.0.1",
   "files": {
-    "df49adc04beb42988f431745a96d55237c1c4b0304cb2a2d880227ed5202f3f9": {
+    "9dedb3920e242d95822c94ec06686e5225bf500e06cd4bb3c86694abfe07a452": {
       "source": {
         "path": "StorageStack.template.json",
         "packaging": "file"
@@ -9,7 +9,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "df49adc04beb42988f431745a96d55237c1c4b0304cb2a2d880227ed5202f3f9.json",
+          "objectKey": "9dedb3920e242d95822c94ec06686e5225bf500e06cd4bb3c86694abfe07a452.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

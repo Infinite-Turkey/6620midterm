@@ -4,12 +4,11 @@ class StorageStack(Stack):
     def __init__(self, scope, construct_id, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
         
-        self.bucket_src = s3.Bucket(self, "SourceBucket", bucket_name="bucket-src")
-        self.bucket_dst = s3.Bucket(self, "DestinationBucket", bucket_name="bucket-dst")
+        self.bucket_src = s3.Bucket(self, "SourceBucket")
+        self.bucket_dst = s3.Bucket(self, "DestinationBucket")
         
         self.table_t = dynamodb.Table(
             self, "BackupTable",
-            table_name="table-t",
             partition_key=dynamodb.Attribute(name="ObjectName", type=dynamodb.AttributeType.STRING),
             sort_key=dynamodb.Attribute(name="CopyTimestamp", type=dynamodb.AttributeType.NUMBER)
         )
