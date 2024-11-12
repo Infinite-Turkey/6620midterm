@@ -4,8 +4,8 @@ import time
 
 s3 = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
-table_name = os.environ['TABLE_NAME']
-bucket_dst = os.environ['BUCKET_DST']
+table_name = os.getenv('TABLE_NAME')
+bucket_dst = os.getenv('BUCKET_DST')
 table = dynamodb.Table(table_name)
 
 def handler(event, context):
