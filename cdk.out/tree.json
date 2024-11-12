@@ -23,6 +23,54 @@
                   "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
                   "version": "2.165.0"
                 }
+              },
+              "Notifications": {
+                "id": "Notifications",
+                "path": "StorageStack/SourceBucket/Notifications",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "StorageStack/SourceBucket/Notifications/Resource",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.165.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "AllowBucketNotificationsToStorageStackReplicatorLambda3ACFC70B": {
+                "id": "AllowBucketNotificationsToStorageStackReplicatorLambda3ACFC70B",
+                "path": "StorageStack/SourceBucket/AllowBucketNotificationsToStorageStackReplicatorLambda3ACFC70B",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "ReplicatorLambdaDF3462CD",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "s3.amazonaws.com",
+                    "sourceAccount": {
+                      "Ref": "AWS::AccountId"
+                    },
+                    "sourceArn": {
+                      "Fn::GetAtt": [
+                        "SourceBucketDDD2130A",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                  "version": "2.165.0"
+                }
               }
             },
             "constructInfo": {
@@ -137,9 +185,407 @@
               "version": "2.165.0"
             }
           },
+          "ReplicatorLambda": {
+            "id": "ReplicatorLambda",
+            "path": "StorageStack/ReplicatorLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "StorageStack/ReplicatorLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "StorageStack/ReplicatorLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.165.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "StorageStack/ReplicatorLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.165.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "StorageStack/ReplicatorLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "StorageStack/ReplicatorLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "DestinationBucket4BECDB47",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "DestinationBucket4BECDB47",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "dynamodb:BatchGetItem",
+                                    "dynamodb:BatchWriteItem",
+                                    "dynamodb:ConditionCheckItem",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:DescribeTable",
+                                    "dynamodb:GetItem",
+                                    "dynamodb:GetRecords",
+                                    "dynamodb:GetShardIterator",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:Query",
+                                    "dynamodb:Scan",
+                                    "dynamodb:UpdateItem"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "BackupTable9BD56191",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "BackupTable9BD56191",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/index/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:DeleteObject",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject",
+                                    "s3:GetObject*",
+                                    "s3:HeadObject",
+                                    "s3:List*",
+                                    "s3:ListBucket",
+                                    "s3:PutObject"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "SourceBucketDDD2130A",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "SourceBucketDDD2130A",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ReplicatorLambdaServiceRoleDefaultPolicy41E14193",
+                            "roles": [
+                              {
+                                "Ref": "ReplicatorLambdaServiceRole50803D97"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.165.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.165.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.165.0"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "StorageStack/ReplicatorLambda/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "StorageStack/ReplicatorLambda/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.165.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "StorageStack/ReplicatorLambda/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.165.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.165.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "StorageStack/ReplicatorLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "a2c4def8ed3d9c4a532d4690c48b8e2dfbed5c1f576b2eda3e0da1ca401f59d8.zip"
+                    },
+                    "environment": {
+                      "variables": {
+                        "SOURCE_BUCKET_NAME": {
+                          "Ref": "SourceBucketDDD2130A"
+                        },
+                        "DESTINATION_BUCKET_NAME": {
+                          "Ref": "DestinationBucket4BECDB47"
+                        },
+                        "TABLE_NAME": {
+                          "Ref": "BackupTable9BD56191"
+                        }
+                      }
+                    },
+                    "handler": "replicator_handler.handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "ReplicatorLambdaServiceRole50803D97",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "python3.8",
+                    "timeout": 300
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.165.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.165.0"
+            }
+          },
+          "BucketNotificationsHandler050a0587b7544547bf325f094a3db834": {
+            "id": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834",
+            "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834",
+            "children": {
+              "Role": {
+                "id": "Role",
+                "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.165.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.165.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:PutBucketNotification",
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+                            "roles": [
+                              {
+                                "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.165.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.165.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.165.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.165.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
           "SourceBucketArn": {
             "id": "SourceBucketArn",
             "path": "StorageStack/SourceBucketArn",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.165.0"
+            }
+          },
+          "ReplicatorLambdaArn": {
+            "id": "ReplicatorLambdaArn",
+            "path": "StorageStack/ReplicatorLambdaArn",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.165.0"
@@ -191,17 +637,17 @@
                   "version": "2.165.0"
                 }
               },
-              "Output{\"Ref\":\"DestinationBucket4BECDB47\"}": {
-                "id": "Output{\"Ref\":\"DestinationBucket4BECDB47\"}",
-                "path": "StorageStack/Exports/Output{\"Ref\":\"DestinationBucket4BECDB47\"}",
+              "Output{\"Ref\":\"BackupTable9BD56191\"}": {
+                "id": "Output{\"Ref\":\"BackupTable9BD56191\"}",
+                "path": "StorageStack/Exports/Output{\"Ref\":\"BackupTable9BD56191\"}",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.165.0"
                 }
               },
-              "Output{\"Ref\":\"BackupTable9BD56191\"}": {
-                "id": "Output{\"Ref\":\"BackupTable9BD56191\"}",
-                "path": "StorageStack/Exports/Output{\"Ref\":\"BackupTable9BD56191\"}",
+              "Output{\"Ref\":\"DestinationBucket4BECDB47\"}": {
+                "id": "Output{\"Ref\":\"DestinationBucket4BECDB47\"}",
+                "path": "StorageStack/Exports/Output{\"Ref\":\"DestinationBucket4BECDB47\"}",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.165.0"
@@ -239,241 +685,11 @@
         "id": "ReplicatorStack",
         "path": "ReplicatorStack",
         "children": {
-          "ReplicatorLambda": {
-            "id": "ReplicatorLambda",
-            "path": "ReplicatorStack/ReplicatorLambda",
-            "children": {
-              "ServiceRole": {
-                "id": "ServiceRole",
-                "path": "ReplicatorStack/ReplicatorLambda/ServiceRole",
-                "children": {
-                  "ImportServiceRole": {
-                    "id": "ImportServiceRole",
-                    "path": "ReplicatorStack/ReplicatorLambda/ServiceRole/ImportServiceRole",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.Resource",
-                      "version": "2.165.0"
-                    }
-                  },
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "ReplicatorStack/ReplicatorLambda/ServiceRole/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                      "aws:cdk:cloudformation:props": {
-                        "assumeRolePolicyDocument": {
-                          "Statement": [
-                            {
-                              "Action": "sts:AssumeRole",
-                              "Effect": "Allow",
-                              "Principal": {
-                                "Service": "lambda.amazonaws.com"
-                              }
-                            }
-                          ],
-                          "Version": "2012-10-17"
-                        },
-                        "managedPolicyArns": [
-                          {
-                            "Fn::Join": [
-                              "",
-                              [
-                                "arn:",
-                                {
-                                  "Ref": "AWS::Partition"
-                                },
-                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                              ]
-                            ]
-                          }
-                        ]
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                      "version": "2.165.0"
-                    }
-                  },
-                  "DefaultPolicy": {
-                    "id": "DefaultPolicy",
-                    "path": "ReplicatorStack/ReplicatorLambda/ServiceRole/DefaultPolicy",
-                    "children": {
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "ReplicatorStack/ReplicatorLambda/ServiceRole/DefaultPolicy/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
-                          "aws:cdk:cloudformation:props": {
-                            "policyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": [
-                                    "s3:DeleteObject*",
-                                    "s3:PutObject",
-                                    "s3:PutObjectLegalHold",
-                                    "s3:PutObjectRetention",
-                                    "s3:PutObjectTagging",
-                                    "s3:PutObjectVersionTagging",
-                                    "s3:Abort*"
-                                  ],
-                                  "Effect": "Allow",
-                                  "Resource": [
-                                    {
-                                      "Fn::ImportValue": "StorageStack:ExportsOutputFnGetAttDestinationBucket4BECDB47Arn6B889445"
-                                    },
-                                    {
-                                      "Fn::Join": [
-                                        "",
-                                        [
-                                          {
-                                            "Fn::ImportValue": "StorageStack:ExportsOutputFnGetAttDestinationBucket4BECDB47Arn6B889445"
-                                          },
-                                          "/*"
-                                        ]
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "Action": [
-                                    "dynamodb:BatchGetItem",
-                                    "dynamodb:GetRecords",
-                                    "dynamodb:GetShardIterator",
-                                    "dynamodb:Query",
-                                    "dynamodb:GetItem",
-                                    "dynamodb:Scan",
-                                    "dynamodb:ConditionCheckItem",
-                                    "dynamodb:BatchWriteItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:UpdateItem",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:DescribeTable"
-                                  ],
-                                  "Effect": "Allow",
-                                  "Resource": [
-                                    {
-                                      "Fn::ImportValue": "StorageStack:ExportsOutputFnGetAttBackupTable9BD56191ArnCA7F0094"
-                                    },
-                                    {
-                                      "Fn::Join": [
-                                        "",
-                                        [
-                                          {
-                                            "Fn::ImportValue": "StorageStack:ExportsOutputFnGetAttBackupTable9BD56191ArnCA7F0094"
-                                          },
-                                          "/index/*"
-                                        ]
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "Action": [
-                                    "s3:GetObject",
-                                    "s3:ListBucket"
-                                  ],
-                                  "Effect": "Allow",
-                                  "Resource": {
-                                    "Fn::ImportValue": "SourceBucketArn"
-                                  }
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "policyName": "ReplicatorLambdaServiceRoleDefaultPolicy41E14193",
-                            "roles": [
-                              {
-                                "Ref": "ReplicatorLambdaServiceRole50803D97"
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                          "version": "2.165.0"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.Policy",
-                      "version": "2.165.0"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_iam.Role",
-                  "version": "2.165.0"
-                }
-              },
-              "Code": {
-                "id": "Code",
-                "path": "ReplicatorStack/ReplicatorLambda/Code",
-                "children": {
-                  "Stage": {
-                    "id": "Stage",
-                    "path": "ReplicatorStack/ReplicatorLambda/Code/Stage",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.AssetStaging",
-                      "version": "2.165.0"
-                    }
-                  },
-                  "AssetBucket": {
-                    "id": "AssetBucket",
-                    "path": "ReplicatorStack/ReplicatorLambda/Code/AssetBucket",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
-                      "version": "2.165.0"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
-                  "version": "2.165.0"
-                }
-              },
-              "Resource": {
-                "id": "Resource",
-                "path": "ReplicatorStack/ReplicatorLambda/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
-                  "aws:cdk:cloudformation:props": {
-                    "code": {
-                      "s3Bucket": {
-                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
-                      },
-                      "s3Key": "9cac0445dc67a3a7922c5fbe83e7f5282523457c991b80adadb8e1287b2614d9.zip"
-                    },
-                    "environment": {
-                      "variables": {
-                        "SOURCE_BUCKET_ARN": {
-                          "Fn::ImportValue": "SourceBucketArn"
-                        },
-                        "DESTINATION_BUCKET_NAME": {
-                          "Fn::ImportValue": "StorageStack:ExportsOutputRefDestinationBucket4BECDB47A299B8F3"
-                        },
-                        "TABLE_NAME": {
-                          "Fn::ImportValue": "StorageStack:ExportsOutputRefBackupTable9BD5619146E86C9D"
-                        }
-                      }
-                    },
-                    "handler": "replicator.handler",
-                    "role": {
-                      "Fn::GetAtt": [
-                        "ReplicatorLambdaServiceRole50803D97",
-                        "Arn"
-                      ]
-                    },
-                    "runtime": "python3.8"
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
-                  "version": "2.165.0"
-                }
-              }
-            },
+          "ReplicatorLambdaImportedArn": {
+            "id": "ReplicatorLambdaImportedArn",
+            "path": "ReplicatorStack/ReplicatorLambdaImportedArn",
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.165.0"
             }
           },
@@ -614,17 +830,17 @@
                                 {
                                   "Action": [
                                     "dynamodb:BatchGetItem",
+                                    "dynamodb:BatchWriteItem",
+                                    "dynamodb:ConditionCheckItem",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:DescribeTable",
+                                    "dynamodb:GetItem",
                                     "dynamodb:GetRecords",
                                     "dynamodb:GetShardIterator",
-                                    "dynamodb:Query",
-                                    "dynamodb:GetItem",
-                                    "dynamodb:Scan",
-                                    "dynamodb:ConditionCheckItem",
-                                    "dynamodb:BatchWriteItem",
                                     "dynamodb:PutItem",
-                                    "dynamodb:UpdateItem",
-                                    "dynamodb:DeleteItem",
-                                    "dynamodb:DescribeTable"
+                                    "dynamodb:Query",
+                                    "dynamodb:Scan",
+                                    "dynamodb:UpdateItem"
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
@@ -708,7 +924,7 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "9e1124c1256873dbf520b75f7da75571b6c3118d82fbda232ec0819b12e55095.zip"
+                      "s3Key": "a2c4def8ed3d9c4a532d4690c48b8e2dfbed5c1f576b2eda3e0da1ca401f59d8.zip"
                     },
                     "environment": {
                       "variables": {
@@ -720,14 +936,15 @@
                         }
                       }
                     },
-                    "handler": "cleaner.handler",
+                    "handler": "cleaner_handler.handler",
                     "role": {
                       "Fn::GetAtt": [
                         "CleanerLambdaServiceRole9F5C3FC0",
                         "Arn"
                       ]
                     },
-                    "runtime": "python3.8"
+                    "runtime": "python3.8",
+                    "timeout": 300
                   }
                 },
                 "constructInfo": {

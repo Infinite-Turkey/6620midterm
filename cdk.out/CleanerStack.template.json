@@ -57,17 +57,17 @@
       {
        "Action": [
         "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
         "dynamodb:GetRecords",
         "dynamodb:GetShardIterator",
-        "dynamodb:Query",
-        "dynamodb:GetItem",
-        "dynamodb:Scan",
-        "dynamodb:ConditionCheckItem",
-        "dynamodb:BatchWriteItem",
         "dynamodb:PutItem",
-        "dynamodb:UpdateItem",
-        "dynamodb:DeleteItem",
-        "dynamodb:DescribeTable"
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
        ],
        "Effect": "Allow",
        "Resource": [
@@ -108,7 +108,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "9e1124c1256873dbf520b75f7da75571b6c3118d82fbda232ec0819b12e55095.zip"
+     "S3Key": "a2c4def8ed3d9c4a532d4690c48b8e2dfbed5c1f576b2eda3e0da1ca401f59d8.zip"
     },
     "Environment": {
      "Variables": {
@@ -120,14 +120,15 @@
       }
      }
     },
-    "Handler": "cleaner.handler",
+    "Handler": "cleaner_handler.handler",
     "Role": {
      "Fn::GetAtt": [
       "CleanerLambdaServiceRole9F5C3FC0",
       "Arn"
      ]
     },
-    "Runtime": "python3.8"
+    "Runtime": "python3.8",
+    "Timeout": 300
    },
    "DependsOn": [
     "CleanerLambdaServiceRoleDefaultPolicy04CE099E",
@@ -135,7 +136,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "CleanerStack/CleanerLambda/Resource",
-    "aws:asset:path": "asset.9e1124c1256873dbf520b75f7da75571b6c3118d82fbda232ec0819b12e55095",
+    "aws:asset:path": "asset.a2c4def8ed3d9c4a532d4690c48b8e2dfbed5c1f576b2eda3e0da1ca401f59d8",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

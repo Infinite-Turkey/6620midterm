@@ -1,12 +1,4 @@
-from aws_cdk import (
-    Stack,
-    aws_lambda as lambda_,
-    aws_s3 as s3,
-    aws_dynamodb as dynamodb,
-    aws_events as events,
-    aws_events_targets as targets,
-    Duration
-)
+from aws_cdk import Stack, aws_iam as iam, Duration, aws_lambda as lambda_, aws_events as events, aws_events_targets as targets, aws_dynamodb as dynamodb, aws_s3 as s3
 from constructs import Construct
 
 class CleanerStack(Stack):
@@ -17,8 +9,9 @@ class CleanerStack(Stack):
         self.cleaner_lambda = lambda_.Function(
             self, 'CleanerLambda',
             runtime=lambda_.Runtime.PYTHON_3_8,
-            handler='cleaner.handler',
-            code=lambda_.Code.from_asset('lambda/cleaner'),
+            handler='cleaner_handler.handler',
+            code=lambda_.Code.from_asset('lambda'),
+            timeout=Duration.seconds(300), 
             environment={
                 'TABLE_NAME': table.table_name,
                 'DESTINATION_BUCKET_NAME': destination_bucket.bucket_name,

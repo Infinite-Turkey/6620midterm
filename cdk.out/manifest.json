@@ -19,7 +19,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/9dedb3920e242d95822c94ec06686e5225bf500e06cd4bb3c86694abfe07a452.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e975cb8b9cd9bfa7a10713757aba948f81d0383484c273f686baf2765c928e72.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -41,6 +41,18 @@
             "data": "SourceBucketDDD2130A"
           }
         ],
+        "/StorageStack/SourceBucket/Notifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SourceBucketNotifications0A6F2084"
+          }
+        ],
+        "/StorageStack/SourceBucket/AllowBucketNotificationsToStorageStackReplicatorLambda3ACFC70B": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SourceBucketAllowBucketNotificationsToStorageStackReplicatorLambda3ACFC70BBE24FC29"
+          }
+        ],
         "/StorageStack/DestinationBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -53,10 +65,52 @@
             "data": "BackupTable9BD56191"
           }
         ],
+        "/StorageStack/ReplicatorLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReplicatorLambdaServiceRole50803D97"
+          }
+        ],
+        "/StorageStack/ReplicatorLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReplicatorLambdaServiceRoleDefaultPolicy41E14193"
+          }
+        ],
+        "/StorageStack/ReplicatorLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReplicatorLambdaDF3462CD"
+          }
+        ],
+        "/StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+          }
+        ],
+        "/StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36"
+          }
+        ],
+        "/StorageStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
+          }
+        ],
         "/StorageStack/SourceBucketArn": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SourceBucketArn"
+          }
+        ],
+        "/StorageStack/ReplicatorLambdaArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReplicatorLambdaArn"
           }
         ],
         "/StorageStack/CDKMetadata/Default": [
@@ -83,16 +137,16 @@
             "data": "ExportsOutputFnGetAttBackupTable9BD56191ArnCA7F0094"
           }
         ],
-        "/StorageStack/Exports/Output{\"Ref\":\"DestinationBucket4BECDB47\"}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ExportsOutputRefDestinationBucket4BECDB47A299B8F3"
-          }
-        ],
         "/StorageStack/Exports/Output{\"Ref\":\"BackupTable9BD56191\"}": [
           {
             "type": "aws:cdk:logicalId",
             "data": "ExportsOutputRefBackupTable9BD5619146E86C9D"
+          }
+        ],
+        "/StorageStack/Exports/Output{\"Ref\":\"DestinationBucket4BECDB47\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefDestinationBucket4BECDB47A299B8F3"
           }
         ],
         "/StorageStack/BootstrapVersion": [
@@ -128,7 +182,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/571195c92e1166f471db338c41698bf322f77d0cfdaf46f0f2cd7318604df901.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/8b8ee1d1c8b5f65189d9179df92ce072b88f49cb102e0534d690388ca5090a1a.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -145,22 +199,10 @@
         "ReplicatorStack.assets"
       ],
       "metadata": {
-        "/ReplicatorStack/ReplicatorLambda/ServiceRole/Resource": [
+        "/ReplicatorStack/ReplicatorLambdaImportedArn": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ReplicatorLambdaServiceRole50803D97"
-          }
-        ],
-        "/ReplicatorStack/ReplicatorLambda/ServiceRole/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ReplicatorLambdaServiceRoleDefaultPolicy41E14193"
-          }
-        ],
-        "/ReplicatorStack/ReplicatorLambda/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ReplicatorLambdaDF3462CD"
+            "data": "ReplicatorLambdaImportedArn"
           }
         ],
         "/ReplicatorStack/CDKMetadata/Default": [
@@ -208,7 +250,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c029a3094c0c666221bf449001b01afef18b4ee7a827b25531119b11ae9a0b32.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/dff5c8fb2d00140ffcfb30d8ba765962d50febe6491d93d87bd549a8652f3a04.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
